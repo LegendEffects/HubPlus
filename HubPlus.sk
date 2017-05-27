@@ -1,0 +1,365 @@
+options:
+  # Options
+  useSB: true
+  useServerSelector: true
+  website: www.LegendEffects.co.uk
+  noPermission: &8&l(&c&l!&8&l) &cYou do not have permission to do that.
+  noAllow: &8&l(&c&l!&8&l) &cYou are not allowed to do that here.
+  allowHubPVP: true # Enables the Hub PvP feature.
+
+
+  # Inventory Items
+  serverInfo: &aServer Info &7(Right Click)
+  serverSelector: &aServer Selector &7(Right Click)
+  hidePlayers: &aHide/Show Players &7(Right Click)
+
+
+  # Server Selector
+  selectTitle: &aServer Selector
+  selectBorder: true
+  selectBorderItem: gray glass
+
+  server1: false # If item is enabled
+  s1Item: stone # Item shown in selector
+  s1Name: &aFiller # Name shown
+  s1Server: example # Server item connects to
+
+  server2: true
+  s2Item: diamond
+  s2Name: &c&lPrison
+  s2Server: prison
+
+  server3: false
+  s3Item: stone
+  s3Name: &aFiller
+  s3Server: example
+
+  server4: true
+  s4Item: grass
+  s4Name: &c&lSkyblock
+  s4Server: skyblock
+
+  server5: false
+  s5Item: stone
+  s5Name: &aFiller
+  s5Server: example
+
+  server6: true
+  s6Item: cake item
+  s6Name: &c&lCreative
+  s6Server: creative
+
+  server7: false
+  s7Item: stone
+  s7Name: &aFiller
+  s7Server: example
+
+
+  # Info item
+  infoTitle: &aServer Information
+  infoBorder: true
+  infoBorderItem: gray glass
+
+  info1: false
+  i1Item: stone
+  i1Name: &aFiller
+  i1Lore: &fFiller Item
+  i1Msg: &aThis is a filler
+
+  info2: true
+  i2Item: emerald
+  i2Name: &c&lWebsite
+  i2Lore: &fwww.LegendEffects.co.uk
+  i2Msg: &aSee our website at: www.LegendEffects.co.uk
+
+  info3: false
+  i3Item: stone
+  i3Name: &aFiller
+  i3Lore: &fFiller Item
+  i3Msg: &aThis is a filler
+
+  info4: true
+  i4Item: diamond
+  i4Name: &c&lStore
+  i4Lore: &fexample.buycraft.net
+  i4Msg: &aVisit our store at: example.buycraft.net
+
+  info5: false
+  i5Item: stone
+  i5Name: &aFiller
+  i5Lore: &fFiller Item
+  i5Msg: &aThis is a filler
+
+  info6: true
+  i6Item: note block
+  i6Name: &aTeamspeak
+  i6Lore: &fts.example.com
+  i6Msg: &aJoin our Teamspeak at: ts.example.com
+
+  info7: false
+  i7Item: stone
+  i7Name: &aFiller
+  i7Lore: &fFiller Item
+  i7Msg: &aThis is a filler
+
+  # messages
+  prefix: &9Hub &8//&7
+  usageMsg: &f[prefix] &7Usage: [command]&7.
+
+  joinMessage: &e[player] has connected.
+  leaveMessage: &e[player] has disconnected.
+
+  setSpawn: [prefix] Spawn successfully set.
+  onUseOfSpawn: [prefix] Teleported.
+
+  flyEnable: [prefix] Flight Enabled.
+  flyDisable: [prefix] Flight Disabled.
+
+  playerShow: [prefix] Now showing all players.
+  playerHide: [prefix] Now hiding all players.
+
+  spacer: &7---------------------------
+  # Gamemodes
+  gmCreativeOther: [prefix] [player] has set your gamemode to Creative.
+  gmSurvivalOther: [prefix] [player] has set your gamemode to Survival.
+  gmCreativeOR: [prefix] Set [player]'s gamemode to Creative.
+  gmSurvivalOR: [prefix] Set [player]'s gamemode to Survival.
+  gmCreative: [prefix] Your gamemode has been set to Creative.
+  gmSurvival: [prefix] Your gamemode has been set to Survival.
+
+function formatInv(p: player):
+  clear {_p}'s inventory
+  set slot 0 of {_p} to book named "{@serverInfo}"
+  set slot 1 of {_p} to compass named "{@serverSelector}"
+  set slot 8 of {_p} to magma cream named "{@hidePlayers}"
+
+function sMsg(p: player , t: text):
+  send {_t} to {_p}
+
+function serverInfo(p: player):
+  open chest with 3 rows named "{@infoTitle}" to {_p}
+  wait 1 ticks
+  if {@infoBorder} is true:
+    set {_count} to 0
+    loop 9 times:
+      format slot {_count} of {_p} with {@infoBorderItem} named " " to be unstealable
+      add 1 to {_count}
+    format slot 9 of {_p} with {@infoBorderItem} named " " to be unstealable
+    format slot 17 of {_p} with {@infoBorderItem} named " " to be unstealable
+    set {_count1} to 18
+    loop 9 times:
+      format slot {_count1} of {_p} with {@infoBorderItem} named " " to be unstealable
+      add 1 to {_count1}
+
+  if {@info1} is true:
+    format slot 10 of {_p} with {@i1Item} named "{@i1Name}" with lore "||{@i1Lore}" to close then run [sMsg({_p} , "{@i1Msg}")]
+  if {@info2} is true:
+    format slot 11 of {_p} with {@i2Item} named "{@i2Name}" with lore "||{@i2Lore}" to close then run [sMsg({_p} , "{@i2Msg}")]
+  if {@info3} is true:
+    format slot 12 of {_p} with {@i3Item} named "{@i3Name}" with lore "||{@i3Lore}" to close then run [sMsg({_p} , "{@i3Msg}")]
+  if {@info4} is true:
+    format slot 13 of {_p} with {@i4Item} named "{@i4Name}" with lore "||{@i4Lore}" to close then run [sMsg({_p} , "{@i4Msg}")]
+  if {@info5} is true:
+    format slot 14 of {_p} with {@i5Item} named "{@i5Name}" with lore "||{@i5Lore}" to close then run [sMsg({_p} , "{@i5Msg}")]
+  if {@info6} is true:
+    format slot 15 of {_p} with {@i6Item} named "{@i6Name}" with lore "||{@i6Lore}" to close then run [sMsg({_p} , "{@i6Msg}")]
+  if {@info7} is true:
+    format slot 16 of {_p} with {@i7Item} named "{@i7Name}" with lore "||{@i7Lore}" to close then run [sMsg({_p} , "{@i7Msg}")]
+function serverSelector(p: player):
+  if {@useServerSelector} is true:
+    open chest with 3 rows named "{@selectTitle}" to {_p}
+    wait 1 ticks
+    if {@selectBorder} is true:
+      set {_count} to 0
+      loop 9 times:
+        format slot {_count} of {_p} with {@selectBorderItem} named " " to be unstealable
+        add 1 to {_count}
+      format slot 9 of {_p} with {@selectBorderItem} named " " to be unstealable
+      format slot 17 of {_p} with {@selectBorderItem} named " " to be unstealable
+      set {_count1} to 18
+      loop 9 times:
+        format slot {_count1} of {_p} with {@selectBorderItem} named " " to be unstealable
+        add 1 to {_count1}
+
+    if {@server1} is true:
+      format slot 10 of {_p} with {@s1Item} named "{@s1Name}" to close then run [bungeecord connect {_p} to "{@s1Server}"]
+    if {@server2} is true:
+      format slot 11 of {_p} with {@s2Item} named "{@s2Name}" to close then run [bungeecord connect {_p} to "{@s2Server}"]
+    if {@server3} is true:
+      format slot 12 of {_p} with {@s3Item} named "{@s3Name}" to close then run [bungeecord connect {_p} to "{@s3Server}"]
+    if {@server4} is true:
+      format slot 13 of {_p} with {@s4Item} named "{@s4Name}" to close then run [bungeecord connect {_p} to "{@s4Server}"]
+    if {@server5} is true:
+      format slot 14 of {_p} with {@s5Item} named "{@s5Name}" to close then run [bungeecord connect {_p} to "{@s5Server}"]
+    if {@server6} is true:
+      format slot 15 of {_p} with {@s6Item} named "{@s6Name}" to close then run [bungeecord connect {_p} to "{@s6Server}"]
+    if {@server7} is true:
+      format slot 16 of {_p} with {@s7Item} named "{@s7Name}" to close then run [bungeecord connect {_p} to "{@s7Server}"]
+
+function formatMsg(p: player , v: text , t: number , o: player):
+  set {_msg} to {_v}
+  replace all "[prefix]" with "{@prefix}" in {_msg}
+  replace all "[player]" with "%{_p}%" in {_msg}
+  if {_t} is 0:
+    set {server.%{_p}%.message} to {_msg}
+  else if {_t} is 1:
+    send "%{_msg}%" to {_p}
+  else if {_t} is 2:
+    broadcast "%{_msg}%"
+  else if {_t} is 3:
+    send "%{_msg}%" to {_o}
+
+function usageMsg(p: player , c: text):
+  set {_msg} to "{@usageMsg}"
+  replace all "[prefix]" with "{@prefix}" in {_msg}
+  replace all "[command]" with "%{_c}%" in {_msg}
+  send "%{_msg}%" to {_p}
+
+function sb(p: player , t: number):
+  set {_uuid} to uuid of {_p}
+  if {hubPlus.parkour.%{_uuid}%.time} is not set:
+    set {_parkourTime} to "Not Completed"
+  else:
+    set {_count} to 0
+    loop {hubPlus.parkour.%{_uuid}%.time} times:
+      add 1 to {_count}
+      if {_count} is 60:
+        set {_count} to 0
+        add 1 to {_minutes}
+    set {_parkourTime} to "%{_minutes}%::%{_count}%"
+
+  if {@useSB} is true:
+    if {_t} is 0:
+      wipe {_p} sidebar
+      set name of sidebar of {_p} to " "
+      set name of sidebar of {_p} to "&aHubPlus"
+      set score "&8" in sidebar of {_p} to 14
+      set score "&a&lPlayer" in sidebar of {_p} to 13
+      set score "&f%{_p}%" in sidebar of {_p} to 12
+      set score "&l" in sidebar of {_p} to 11
+      set score "&b&lPlayers" in sidebar of {_p} to 10
+      set score "&f%number of players%" in sidebar of {_p} to 9
+      set score "&m" in sidebar of {_p} to 8
+      set score "&6&lServer" in sidebar of {_p} to 7
+      set score "&fHub" in sidebar of {_p} to 6
+      set score "&5" in sidebar of {_p} to 5
+      set score "&c&lParkour" in sidebar of {_p} to 4
+      set score "&f%{_parkourTime}%" in sidebar of {_p} to 3
+      set score "&7" in sidebar of {_p} to 2
+      set score "&f----------------" in sidebar of {_p} to 1
+
+on click with book:
+  if name of tool is "{@serverInfo}":
+    serverInfo(player)
+on click with compass:
+  if name of tool is "{@serverSelector}":
+    serverSelector(player)
+
+on click with magma cream:
+  if name of tool is "{@hidePlayers}":
+    if {hubPlus.%uuid of player%.hide} is set:
+      reveal all players from player
+      formatMsg(player , "{@playerShow}" , 1 , player)
+      delete {hubPlus.%uuid of player%.hide}
+    else:
+      hide all players from player
+      formatMsg(player , "{@playerHide}" , 1 , player)
+      set {hubPlus.%uuid of player%.hide} to true
+
+command /announce [<text>]:
+  aliases: /bc, /broadcast
+  permission: hubPlus.announce
+  permission message: {@noPermission}
+  trigger:
+    if arg 1 is not set:
+      usageMsg(player , "/announce <msg>")
+      stop
+    broadcast "{@spacer}"
+    broadcast "%arg 1%"
+    broadcast "{@spacer}"
+
+on gamemode change to creative:
+  set {hubPlus.%uuid of player%.gm} to 1
+on gamemode change to survival:
+  delete {hubPlus.%uuid of player%.gm}
+
+command /gm [<player>]:
+  permission: hubPlus.gamemode
+  permission message: {@noPermission}
+  trigger:
+    if arg 1 is set:
+      if player has the permission "hubPlus.gamemode.other":
+        if {hubPlus.%uuid of arg 1%.gm} is not set:
+          set the player arg 1's gamemode to creative
+          formatMsg(player , "{@gmCreativeOther}" , 3 , arg 1)
+          formatMsg(arg 1 , "{@gmCreativeOR}" , 3 , player)
+        else:
+          formatMsg(player , "{@gmSurvivalOther}" , 3 , arg 1)
+          formatMsg(arg 1 , "{@gmSurvivalOR}" , 3 , player)
+          set the player arg 1's gamemode to survival
+    else:
+      if {hubPlus.%uuid of player%.gm} is not set:
+        set the player's gamemode to creative
+        formatMsg(player , "{@gmCreative}" , 1 , player)
+      else:
+        set the player's gamemode to survival
+        formatMsg(player , "{@gmSurvival}" , 1 , player)
+
+command /fly:
+  permission: hubPlus.fly
+  permission message: {@noPermission}
+  trigger:
+    if {hubPlus.%uuid of player%.fly} is set:
+      formatMsg(player , "{@flyDisable}" , 1 , player)
+      delete {hubPlus.%uuid of player%.fly}
+      set player's fly mode to false
+    else:
+      formatMsg(player , "{@flyEnable}" , 1 , player)
+      set {hubPlus.%uuid of player%.fly} to true
+      set player's fly mode to true
+
+command /setspawn:
+  trigger:
+    set {hubPlus.spawn} to location of player
+    formatMsg(player , "{@setSpawn}" , 1 , player)
+
+command /spawn:
+  trigger:
+    teleport player to {hubPlus.spawn}
+    formatMsg(player , "{@onUseOfSpawn}" , 1 , player)
+
+on join:
+  formatMsg(player , "{@joinMessage}" , 0 , player)
+  set join message to "%{server.%player%.message}%"
+  wait 1 ticks
+  teleport player to {hubPlus.spawn}
+  formatInv(player)
+  sb(player , 0)
+  delete {server.%player%.message}
+
+on quit:
+  formatMsg(player , "{@leaveMessage}" , 0 , player)
+  set quit message to "%{server.%player%.message}%"
+  delete {server.%player%.message}
+
+on hunger meter change:
+  set the player's food level to 10
+on weather change:
+    set weather to sunny
+
+on break:
+  if {hubPlus.%uuid of player%.gm} is not set:
+    cancel event
+    formatMsg(player , "{@noAllow}" , 1 , player)
+on place:
+  if {hubPlus.%uuid of player%.gm} is not set:
+    cancel event
+    formatMsg(player , "{@noAllow}" , 1 , player)
+on damage:
+  cancel event
+  formatMsg(attacker , "{@noAllow}" , 1 , attacker)
+
+on server list ping:
+  set {_players} to number of players
+  add 1 to {_players}
+  set max player count to {_players}

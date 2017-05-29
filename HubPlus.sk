@@ -231,7 +231,7 @@ function formatMsg(p: player , v: text , t: number , o: player):
   replace all "[player]" with "%{_p}%" in {_msg}
   replace all "[ping]" with "%{_p}'s ping%" in {_msg}
   if {_t} is 0:
-    set {server::%{_p}%.message} to {_msg}
+    set {server::%{_p}%::message} to {_msg}
   else if {_t} is 1:
     send "%{_msg}%" to {_p}
   else if {_t} is 2:
@@ -248,7 +248,7 @@ function usageMsg(p: player , c: text):
 function sb(p: player):
   set {_uuid} to uuid of {_p}
   if {@useSB} is true:
-    if {HubPlus::%{_uuid}%.pvp} is not set:
+    if {HubPlus::%{_uuid}%::pvp} is not set:
       wipe {_p} sidebar
       set name of sidebar of {_p} to " "
       set name of sidebar of {_p} to "&a&lHubPlus"
@@ -263,23 +263,23 @@ function sb(p: player):
       set score "&fHub" in sidebar of {_p} to 5
       set score "&5" in sidebar of {_p} to 4
       set score "&c&lPVP Kills" in sidebar of {_p} to 3
-      set score "&f%{HubPlus::%{_uuid}%.pvp.kills}%" in sidebar of {_p} to 2
+      set score "&f%{HubPlus::%{_uuid}%::pvp::kills}%" in sidebar of {_p} to 2
       set score "&f{@SBSpacer}" in sidebar of {_p} to 1
     else:
       wipe {_p} sidebar
       set name of sidebar of {_p} to " "
       set name of sidebar of {_p} to "&a&lHubPlus &7[PVP Arena]"
       set score "&6{@SBSpacer}" in sidebar of {_p} to 7
-      if {HubPlus::%{_uuid}%.cooldowns.timer} is set:
-        if {HubPlus::%{_uuid}%.cooldowns.timer} is greater than 9:
-          set score "&c&lSpawn Tag&f: &c00&7:&c%{HubPlus::%{_uuid}%.cooldowns.timer}%" in sidebar of {_p} to 6
+      if {HubPlus::%{_uuid}%::cooldowns::timer} is set:
+        if {HubPlus::%{_uuid}%::cooldowns::timer} is greater than 9:
+          set score "&c&lSpawn Tag&f: &c00&7:&c%{HubPlus::%{_uuid}%::cooldowns::timer}%" in sidebar of {_p} to 6
         else:
-          set score "&c&lSpawn Tag&f: &c00&7:&c0%{HubPlus::%{_uuid}%.cooldowns.timer}%" in sidebar of {_p} to 5
-      if {HubPlus::%{_uuid}%.cooldowns.repair} is set:
-        set score "&5&lRepair&f: &c%{HubPlus::%{_uuid}%.cooldowns.repair}%&cs" in sidebar of {_p} to 4
-      if {HubPlus::%{_uuid}%.cooldowns.epearl} is set:
-        set score "&e&lEnderpearl&f: &c%{HubPlus::%{_uuid}%.cooldowns.epearl}%&cs" in sidebar of {_p} to 3
-      set score "&b&lKills&f: &c%{HubPlus::%{_uuid}%.pvp.kills}%" in sidebar of {_p} to 2
+          set score "&c&lSpawn Tag&f: &c00&7:&c0%{HubPlus::%{_uuid}%::cooldowns::timer}%" in sidebar of {_p} to 5
+      if {HubPlus::%{_uuid}%::cooldowns::repair} is set:
+        set score "&5&lRepair&f: &c%{HubPlus::%{_uuid}%::cooldowns::repair}%&cs" in sidebar of {_p} to 4
+      if {HubPlus::%{_uuid}%::cooldowns::epearl} is set:
+        set score "&e&lEnderpearl&f: &c%{HubPlus::%{_uuid}%::cooldowns::epearl}%&cs" in sidebar of {_p} to 3
+      set score "&b&lKills&f: &c%{HubPlus::%{_uuid}%::pvp::kills}%" in sidebar of {_p} to 2
       set score "{@SBSpacer}" in sidebar of {_p} to 1
 
 function formatInv(p: player):
@@ -310,16 +310,16 @@ function giveKit(p: player):
 function pvpToggle(p: player):
   wait 1 ticks
   set {_uuid} to uuid of {_p}
-  if {HubPlus::%{_uuid}%.pvp} is not set:
-    set {HubPlus::%{_uuid}%.pvp} to true
+  if {HubPlus::%{_uuid}%::pvp} is not set:
+    set {HubPlus::%{_uuid}%::pvp} to true
     formatMsg({_p} , "{@enablePvp}" , 1 , {_p})
     giveKit({_p})
     teleport {_p} to {hubPlus::arena}
-    if {hubPlus::%{_uuid}%.hide} is set:
+    if {hubPlus::%{_uuid}%::hide} is set:
       reveal all players from {_p}
       formatMsg({_p} , "{@playerShow}" , 1 , {_p})
   else:
-    delete {HubPlus::%{_uuid}%.pvp}
+    delete {HubPlus::%{_uuid}%::pvp}
     formatMsg({_p} , "{@disablePvp}" , 1 , {_p})
     formatInv({_p})
 
@@ -484,12 +484,12 @@ command /setspawn:
 # Custom Join / Quit
 on join:
   formatMsg(player , "{@joinMessage}" , 0 , player)
-  set join message to "%{server::%player%.message}%"
+  set join message to "%{server::%player%::message}%"
   wait 1 ticks
   teleport player to {hubPlus::spawn}
   formatInv(player)
   sb(player)
-  delete {server::%player%.message}
+  delete {server::%player%::message}
   if {@useBossBar} is true:
     set bossbar named "{@bossBar}" for player to 100
   if {@useTabList} is true:

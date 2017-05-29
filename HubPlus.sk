@@ -218,7 +218,7 @@ function formatMsg(p: player , v: text , t: number , o: player):
   replace all "[player]" with "%{_p}%" in {_msg}
   replace all "[ping]" with "%{_p}'s ping%" in {_msg}
   if {_t} is 0:
-    set {server.%{_p}%.message} to {_msg}
+    set {server::%{_p}%::message} to {_msg}
   else if {_t} is 1:
     send "%{_msg}%" to {_p}
   else if {_t} is 2:
@@ -235,7 +235,7 @@ function usageMsg(p: player , c: text):
 function sb(p: player):
   set {_uuid} to uuid of {_p}
   if {@useSB} is true:
-    if {HubPlus.%{_uuid}%.pvp} is not set:
+    if {HubPlus::%{_uuid}%::pvp} is not set:
       wipe {_p} sidebar
       set name of sidebar of {_p} to " "
       set name of sidebar of {_p} to "&a&lHubPlus"
@@ -250,28 +250,28 @@ function sb(p: player):
       set score "&fHub" in sidebar of {_p} to 5
       set score "&5" in sidebar of {_p} to 4
       set score "&c&lPVP Kills" in sidebar of {_p} to 3
-      set score "&f%{HubPlus.%{_uuid}%.pvp.kills}%" in sidebar of {_p} to 2
+      set score "&f%{HubPlus::%{_uuid}%::pvp::kills}%" in sidebar of {_p} to 2
       set score "&f{@SBSpacer}" in sidebar of {_p} to 1
     else:
       wipe {_p} sidebar
       set name of sidebar of {_p} to " "
       set name of sidebar of {_p} to "&a&lHubPlus &7[PVP Arena]"
       set score "&6{@SBSpacer}" in sidebar of {_p} to 7
-      if {HubPlus.%{_uuid}%.cooldowns.timer} is set:
-        if {HubPlus.%{_uuid}%.cooldowns.timer} is greater than 9:
-          set score "&c&lSpawn Tag&f: &c00&7:&c%{HubPlus.%{_uuid}%.cooldowns.timer}%" in sidebar of {_p} to 6
+      if {HubPlus::%{_uuid}%::cooldowns::timer} is set:
+        if {HubPlus::%{_uuid}%::cooldowns::timer} is greater than 9:
+          set score "&c&lSpawn Tag&f: &c00&7:&c%{HubPlus::%{_uuid}%::cooldowns::timer}%" in sidebar of {_p} to 6
         else:
-          set score "&c&lSpawn Tag&f: &c00&7:&c0%{HubPlus.%{_uuid}%.cooldowns.timer}%" in sidebar of {_p} to 5
-      if {HubPlus.%{_uuid}%.cooldowns.repair} is set:
-        set score "&5&lRepair&f: &c%{HubPlus.%{_uuid}%.cooldowns.repair}%&cs" in sidebar of {_p} to 4
-      if {HubPlus.%{_uuid}%.cooldowns.epearl} is set:
-        set score "&e&lEnderpearl&f: &c%{HubPlus.%{_uuid}%.cooldowns.epearl}%&cs" in sidebar of {_p} to 3
-      set score "&b&lKills&f: &c%{HubPlus.%{_uuid}%.pvp.kills}%" in sidebar of {_p} to 2
+          set score "&c&lSpawn Tag&f: &c00&7:&c0%{HubPlus::%{_uuid}%::cooldowns::timer}%" in sidebar of {_p} to 5
+      if {HubPlus::%{_uuid}%::cooldowns::repair} is set:
+        set score "&5&lRepair&f: &c%{HubPlus::%{_uuid}%::cooldowns::repair}%&cs" in sidebar of {_p} to 4
+      if {HubPlus::%{_uuid}%::cooldowns::epearl} is set:
+        set score "&e&lEnderpearl&f: &c%{HubPlus::%{_uuid}%::cooldowns::epearl}%&cs" in sidebar of {_p} to 3
+      set score "&b&lKills&f: &c%{HubPlus::%{_uuid}%::pvp::kills}%" in sidebar of {_p} to 2
       set score "{@SBSpacer}" in sidebar of {_p} to 1
 
 function formatInv(p: player):
   sb({_p})
-  teleport {_p} to {HubPlus.spawn}
+  teleport {_p} to {HubPlus::spawn}
   clear {_p}'s inventory
   set slot 0 of {_p} to book named "{@serverInfo}"
   set slot 1 of {_p} to compass named "{@serverSelector}"
@@ -295,25 +295,25 @@ function giveKit(p: player):
 function pvpToggle(p: player):
   wait 1 ticks
   set {_uuid} to uuid of {_p}
-  if {HubPlus.%{_uuid}%.pvp} is not set:
-    set {HubPlus.%{_uuid}%.pvp} to true
+  if {HubPlus::%{_uuid}%::pvp} is not set:
+    set {HubPlus::%{_uuid}%::pvp} to true
     formatMsg({_p} , "{@enablePvp}" , 1 , {_p})
     giveKit({_p})
-    teleport {_p} to {hubPlus.arena}
-    if {hubPlus.%{_uuid}%.hide} is set:
+    teleport {_p} to {hubPlus::arena}
+    if {hubPlus::%{_uuid}%::hide} is set:
       reveal all players from {_p}
       formatMsg({_p} , "{@playerShow}" , 1 , {_p})
   else:
-    delete {HubPlus.%{_uuid}%.pvp}
+    delete {HubPlus::%{_uuid}%::pvp}
     formatMsg({_p} , "{@disablePvp}" , 1 , {_p})
     formatInv({_p})
 
 command /pvp:
   trigger:
-    if {HubPlus.%uuid of player%.pvp} is not set:
+    if {HubPlus::%uuid of player%::pvp} is not set:
       pvpToggle(player)
     else:
-      if {HubPlus.%uuid of player%.cooldowns.timer} is not set:
+      if {HubPlus::%uuid of player%::cooldowns::timer} is not set:
         pvpToggle(player)
       else:
         formatMsg(player , "{@spawnTagMsg}" , 1 , player)
@@ -329,20 +329,20 @@ on click with compass:
     serverSelector(player)
 on click with magma cream:
   if name of tool is "{@hidePlayers}":
-    if {hubPlus.%uuid of player%.hide} is set:
+    if {hubPlus::%uuid of player%::hide} is set:
       reveal all players from player
       formatMsg(player , "{@playerShow}" , 1 , player)
-      delete {hubPlus.%uuid of player%.hide}
+      delete {hubPlus::%uuid of player%::hide}
     else:
       hide all players from player
       formatMsg(player , "{@playerHide}" , 1 , player)
-      set {hubPlus.%uuid of player%.hide} to true
+      set {hubPlus::%uuid of player%::hide} to true
 
 # Player Commands
 command /spawn:
   trigger:
-    if {HubPlus.%uuid of player%.pvp} is set:
-      if {HubPlus.%uuid of player%.cooldowns.timer} is not set:
+    if {HubPlus::%uuid of player%::pvp} is set:
+      if {HubPlus::%uuid of player%::cooldowns::timer} is not set:
         pvpToggle(player)
       else:
         formatMsg(player , "{@spawnTagMsg}" , 1 , player)
@@ -361,13 +361,13 @@ command /msg [<player>] [<text>]:
     if arg 2 is not set:
       usageMsg(player , "/msg <player> <msg>")
       stop
-    loop {hubPlus.%uuid of arg 1%.ignore::*}:
+    loop {hubPlus::%uuid of arg 1%::ignore::*}:
       if loop-value is player:
         formatMsg(arg 1, "{@ignoredError}" , 3 , player)
         stop
     send "&7(&cYou &7-> &c%arg 1%&7) %arg 2%"
     send "&7(&c%player%&7 -> &cYou&7) %arg 2%" to arg 1
-    set {hubPlus.%uuid of arg 1%.lastrecieve} to player
+    set {hubPlus::%uuid of arg 1%::lastrecieve} to player
 
 command /r [<text>]:
   aliases: /respond
@@ -377,10 +377,10 @@ command /r [<text>]:
     if arg 1 is not set:
       usageMsg(player , "/r <msg>")
       stop
-    if {hubPlus.%uuid of player%.lastrecieve} is not set:
+    if {hubPlus::%uuid of player%::lastrecieve} is not set:
       formatMsg(player , "{@noLastRecieve}" , 1 , player)
       stop
-    make player execute command "/msg %{hubPlus.%uuid of player%.lastrecieve}% %arg 1%"
+    make player execute command "/msg %{hubPlus::%uuid of player%::lastrecieve}% %arg 1%"
 
 command /ping [<player>]:
   permission: hubPlus.ping
@@ -414,9 +414,9 @@ command /clearchat:
     formatMsg(player , "{@chatclear}" , 2 , player)
 
 on gamemode change to creative:
-  set {hubPlus.%uuid of player%.gm} to 1
+  set {hubPlus::%uuid of player%::gm} to 1
 on gamemode change to survival:
-  delete {hubPlus.%uuid of player%.gm}
+  delete {hubPlus::%uuid of player%::gm}
 
 command /gm [<player>]:
   permission: hubPlus.gamemode
@@ -424,7 +424,7 @@ command /gm [<player>]:
   trigger:
     if arg 1 is set:
       if player has the permission "hubPlus.gamemode.other":
-        if {hubPlus.%uuid of arg 1%.gm} is not set:
+        if {hubPlus::%uuid of arg 1%::gm} is not set:
           set the player arg 1's gamemode to creative
           formatMsg(player , "{@gmCreativeOther}" , 3 , arg 1)
           formatMsg(arg 1 , "{@gmCreativeOR}" , 3 , player)
@@ -433,7 +433,7 @@ command /gm [<player>]:
           formatMsg(arg 1 , "{@gmSurvivalOR}" , 3 , player)
           set the player arg 1's gamemode to survival
     else:
-      if {hubPlus.%uuid of player%.gm} is not set:
+      if {hubPlus::%uuid of player%::gm} is not set:
         set the player's gamemode to creative
         formatMsg(player , "{@gmCreative}" , 1 , player)
       else:
@@ -444,44 +444,44 @@ command /fly:
   permission: hubPlus.fly
   permission message: {@noPermission}
   trigger:
-    if {hubPlus.%uuid of player%.fly} is set:
+    if {hubPlus::%uuid of player%::fly} is set:
       formatMsg(player , "{@flyDisable}" , 1 , player)
-      delete {hubPlus.%uuid of player%.fly}
+      delete {hubPlus::%uuid of player%::fly}
       set player's fly mode to false
     else:
       formatMsg(player , "{@flyEnable}" , 1 , player)
-      set {hubPlus.%uuid of player%.fly} to true
+      set {hubPlus::%uuid of player%::fly} to true
       set player's fly mode to true
 
 command /setarena:
   permission: hubPlus.setarena
   permission message: {@noPermission}
   trigger:
-    set {hubPlus.arena} to location of player
+    set {hubPlus::arena} to location of player
     formatMsg(player , "{@setArena}" , 1 , player)
 command /setspawn:
   permission: hubPlus.setspawn
   permission message: {@noPermission}
   trigger:
-    set {hubPlus.spawn} to location of player
+    set {hubPlus::spawn} to location of player
     formatMsg(player , "{@setSpawn}" , 1 , player)
 
 # Custom Join / Quit
 on join:
   formatMsg(player , "{@joinMessage}" , 0 , player)
-  set join message to "%{server.%player%.message}%"
+  set join message to "%{server::%player%::message}%"
   wait 1 ticks
-  teleport player to {hubPlus.spawn}
+  teleport player to {hubPlus::spawn}
   formatInv(player)
   sb(player)
-  delete {server.%player%.message}
+  delete {server::%player%::message}
 
 on quit:
   formatMsg(player , "{@leaveMessage}" , 0 , player)
-  set quit message to "%{server.%player%.message}%"
-  delete {server.%player%.message}
-  delete {hubPlus.%uuid of player%.pvp}
-  delete {hubPlus.%uuid of player%.lastrecieve}
+  set quit message to "%{server::%player%::message}%"
+  delete {server::%player%::message}
+  delete {hubPlus::%uuid of player%::pvp}
+  delete {hubPlus::%uuid of player%::lastrecieve}
 
 # Event Cancel
 on hunger meter change:
@@ -489,11 +489,11 @@ on hunger meter change:
 on weather change:
     set weather to sunny
 on break:
-  if {hubPlus.%uuid of player%.gm} is not set:
+  if {hubPlus::%uuid of player%::gm} is not set:
     cancel event
     formatMsg(player , "{@noAllow}" , 1 , player)
 on place:
-  if {hubPlus.%uuid of player%.gm} is not set:
+  if {hubPlus::%uuid of player%::gm} is not set:
     cancel event
     formatMsg(player , "{@noAllow}" , 1 , player)
 on pickup:
@@ -515,19 +515,19 @@ on drop:
     send "&aYou might want to keep that."
 
 on damage:
-  if {HubPlus.%uuid of attacker%.pvp} is set:
-    if {HubPlus.%uuid of victim%.pvp} is set:
+  if {HubPlus::%uuid of attacker%::pvp} is set:
+    if {HubPlus::%uuid of victim%::pvp} is set:
       damage cause is attack:
-        set {HubPlus.%uuid of attacker%.cooldowns.repair.break} to true
-        set {HubPlus.%uuid of attacker%.cooldowns.timer} to {@spawnTag}
-        if {HubPlus.%uuid of attacker%.cooldown.timer.inwhile} is not set:
-          while {HubPlus.%uuid of attacker%.cooldowns.timer} is greater than 0:
-            set {HubPlus.%uuid of attacker%.cooldown.timer.inwhile} to true
+        set {HubPlus::%uuid of attacker%::cooldowns::repair::break} to true
+        set {HubPlus::%uuid of attacker%::cooldowns::timer} to {@spawnTag}
+        if {HubPlus::%uuid of attacker%::cooldown::timer::inwhile} is not set:
+          while {HubPlus::%uuid of attacker%::cooldowns::timer} is greater than 0:
+            set {HubPlus::%uuid of attacker%::cooldown::timer::inwhile} to true
             sb(attacker)
             wait 1 second
-            subtract 1 from {HubPlus.%uuid of attacker%.cooldowns.timer}
-          delete {HubPlus.%uuid of attacker%.cooldown.timer.inwhile}
-          delete {HubPlus.%uuid of attacker%.cooldowns.timer}
+            subtract 1 from {HubPlus::%uuid of attacker%::cooldowns::timer}
+          delete {HubPlus::%uuid of attacker%::cooldown::timer::inwhile}
+          delete {HubPlus::%uuid of attacker%::cooldowns::timer}
         sb(attacker)
     else:
       cancel event
@@ -537,36 +537,36 @@ on damage:
     formatMsg(attacker , "{@noAllow}" , 1 , attacker)
 
 on damage:
-  if {HubPlus.%uuid of attacker%.pvp} is set:
-    if {HubPlus.%uuid of victim%.pvp} is set:
+  if {HubPlus::%uuid of attacker%::pvp} is set:
+    if {HubPlus::%uuid of victim%::pvp} is set:
 
       damage cause is attack:
-        set {HubPlus.%uuid of victim%.cooldowns.repair.break} to true
-        set {HubPlus.%uuid of victim%.cooldowns.timer} to {@spawnTag}
-        if {HubPlus.%uuid of victim%.cooldown.timer.inwhile} is not set:
-          while {HubPlus.%uuid of victim%.cooldowns.timer} is greater than 0:
-            set {HubPlus.%uuid of victim%.cooldown.timer.inwhile} to true
+        set {HubPlus::%uuid of victim%::cooldowns::repair::break} to true
+        set {HubPlus::%uuid of victim%::cooldowns::timer} to {@spawnTag}
+        if {HubPlus::%uuid of victim%::cooldown::timer::inwhile} is not set:
+          while {HubPlus::%uuid of victim%::cooldowns::timer} is greater than 0:
+            set {HubPlus::%uuid of victim%::cooldown::timer::inwhile} to true
             sb(victim)
             wait 1 second
-            subtract 1 from {HubPlus.%uuid of victim%.cooldowns.timer}
-          delete {HubPlus.%uuid of victim%.cooldown.timer.inwhile}
-          delete {HubPlus.%uuid of victim%.cooldowns.timer}
+            subtract 1 from {HubPlus::%uuid of victim%::cooldowns::timer}
+          delete {HubPlus::%uuid of victim%::cooldown::timer::inwhile}
+          delete {HubPlus::%uuid of victim%::cooldowns::timer}
       sb(victim)
 
 on rightclick with ender pearl:
-  if {HubPlus.%uuid of player%.cooldowns.epearl} is greater than 0:
+  if {HubPlus::%uuid of player%::cooldowns::epearl} is greater than 0:
     cancel event
   else:
-    set {HubPlus.%uuid of player%.cooldowns.epearl} to {@epearlTimer}
-    while {HubPlus.%uuid of player%.cooldowns.epearl} is greater than 0:
+    set {HubPlus::%uuid of player%::cooldowns::epearl} to {@epearlTimer}
+    while {HubPlus::%uuid of player%::cooldowns::epearl} is greater than 0:
       sb(player)
       wait 0.10 second
-      subtract 0.10 from {HubPlus.%uuid of player%.cooldowns.epearl}
-    delete {HubPlus.%uuid of player%.cooldowns.epearl}
+      subtract 0.10 from {HubPlus::%uuid of player%::cooldowns::epearl}
+    delete {HubPlus::%uuid of player%::cooldowns::epearl}
     sb(player)
 
 on click with mushroom stew:
-  if {HubPlus.%uuid of player%.pvp} is set:
+  if {HubPlus::%uuid of player%::pvp} is set:
     if player's health is not equal to player's max health:
       cancel event
       heal the player by 3.5 hearts
@@ -575,25 +575,25 @@ on click with mushroom stew:
 
 command /repair:
   trigger:
-    set {HubPlus.%uuid of player%.cooldowns.repair} to {@repairTimer}
+    set {HubPlus::%uuid of player%::cooldowns::repair} to {@repairTimer}
     formatMsg(player , "{@repairStart}" , 1 , player)
-    while {HubPlus.%uuid of player%.cooldowns.repair} is greater than 0:
-      if {HubPlus.%uuid of player%.cooldowns.repair.break} is not set:
+    while {HubPlus::%uuid of player%::cooldowns::repair} is greater than 0:
+      if {HubPlus::%uuid of player%::cooldowns::repair::break} is not set:
         sb(player)
         wait 1 second
-        subtract 1 from {HubPlus.%uuid of player%.cooldowns.repair}
+        subtract 1 from {HubPlus::%uuid of player%::cooldowns::repair}
       else:
-        delete {HubPlus.%uuid of player%.cooldowns.repair}
-        delete {HubPlus.%uuid of player%.cooldowns.repair.break}
+        delete {HubPlus::%uuid of player%::cooldowns::repair}
+        delete {HubPlus::%uuid of player%::cooldowns::repair::break}
         sb(player)
         formatMsg(player , "{@repairFail}" , 1 , player)
-    delete {HubPlus.%uuid of player%.cooldowns.repair}
-    delete {HubPlus.%uuid of player%.cooldowns.repair.break}
+    delete {HubPlus::%uuid of player%::cooldowns::repair}
+    delete {HubPlus::%uuid of player%::cooldowns::repair::break}
     sb(player)
     giveKit(player)
 
 on death:
-  add 1 to {HubPlus.%uuid of attacker%.pvp.kills}
+  add 1 to {HubPlus::%uuid of attacker%::pvp::kills}
   clear drops
 
 on respawn:

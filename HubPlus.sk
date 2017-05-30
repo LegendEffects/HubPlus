@@ -143,6 +143,8 @@ options:
 
   spacer: &7&m---------------------------
   SBSpacer: &f&m--------------------&8
+  SBTitle: &a&lHubPlus
+  SBTitlePvp: &a&lHubPlus &7[PVP Arena]
 
   pingMsg: [prefix] Your ping is [ping].
   pingOther: [prefix] [player]'s ping is [ping].
@@ -253,7 +255,7 @@ function sb(p: player):
     if {HubPlus::%{_uuid}%::pvp} is not set:
       wipe {_p} sidebar
       set name of sidebar of {_p} to " "
-      set name of sidebar of {_p} to "&a&lHubPlus"
+      set name of sidebar of {_p} to "{@SBTitle}"
       set score "&8{@SBSpacer}" in sidebar of {_p} to 13
       set score "&a&lPlayer" in sidebar of {_p} to 12
       set score "&f%{_p}%" in sidebar of {_p} to 11
@@ -270,7 +272,7 @@ function sb(p: player):
     else:
       wipe {_p} sidebar
       set name of sidebar of {_p} to " "
-      set name of sidebar of {_p} to "&a&lHubPlus &7[PVP Arena]"
+      set name of sidebar of {_p} to "{@SBTitlePvp}"
       set score "&6{@SBSpacer}" in sidebar of {_p} to 7
       if {HubPlus::%{_uuid}%::cooldowns::timer} is set:
         if {HubPlus::%{_uuid}%::cooldowns::timer} is greater than 9:

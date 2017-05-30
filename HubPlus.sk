@@ -6,13 +6,14 @@ options:
   noAllow: &8&l(&c&l!&8&l) &cYou are not allowed to do that here.
 
   # Tab / Bossbar / Title
-  useBossBar: true
   useTabList: true
-  titleOnJoin: true
-
   tabHead: &eHey &a%player%&e!
   tabFoot: &7&m------&a&l HubPlus &7&m------
+
+  useBossBar: true
   bossBar: &a&lHubPlus &eRemember to rate on Spigot!
+
+  titleOnJoin: true
   title: &a&lHubPlus
   subtitle: &ePlease rate me on Spigot!
   titleLength: 3 # How long it will appear in seconds
@@ -84,8 +85,8 @@ options:
   info2: true
   i2Item: emerald
   i2Name: &c&lWebsite
-  i2Lore: &fwww.LegendEffects.co.uk
-  i2Msg: &aSee our website at: www.LegendEffects.co.uk
+  i2Lore: &fwww.example.com
+  i2Msg: &aSee our website at: www.example.com
 
   info3: false
   i3Item: stone
@@ -150,8 +151,8 @@ options:
   ignoredError: [prefix] [player] has you ignored.
   chatclear: [prefix] [player] has cleared the chat.
 
-  staffEnable: [prefix] Staff mode disabled.
-  staffDisable: [prefix] Staff mode enabled.
+  vVisable: [prefix] You are now visable.
+  vInvisable: [prefix] You are now invisable.
   # Gamemodes
   gmCreativeOther: [prefix] [player] has set your gamemode to Creative.
   gmSurvivalOther: [prefix] [player] has set your gamemode to Survival.
@@ -193,6 +194,7 @@ function serverInfo(p: player):
     format slot 15 of {_p} with {@i6Item} named "{@i6Name}" with lore "||{@i6Lore}" to close then run [sMsg({_p} , "{@i6Msg}")]
   if {@info7} is true:
     format slot 16 of {_p} with {@i7Item} named "{@i7Name}" with lore "||{@i7Lore}" to close then run [sMsg({_p} , "{@i7Msg}")]
+
 # serverSelector
 function serverSelector(p: player):
   if {@useServerSelector} is true:
@@ -406,6 +408,19 @@ command /ping [<player>]:
     else:
       formatMsg(arg 1 , "{@pingOther}" , 3 , player)
 # Staff Commands
+command /vanish:
+  permission: staff.admin.vanish
+  permission message: &9Permissions> &7Sorry but you do not have the permission &c'staff.admin.vanish'&7.
+  trigger:
+    if {hubPlus::%uuid of player%::vanish} is true:
+      delete {hubPlus::%uuid of player%::vanish}
+      reveal player to all players
+      formatMsg(player , "{@vVisable}" , 1 , player)
+
+    else if {hubPlus::%uuid of player%::vanish} is not set:
+      set {hubPlus::%uuid of player%::vanish} to true
+      hide player from all players
+      formatMsg(player , "{@vInvisable}" , 1 , player)
 
 command /announce [<text>]:
   aliases: /bc, /broadcast

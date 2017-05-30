@@ -326,6 +326,8 @@ function pvpToggle(p: player):
     formatInv({_p})
 
 command /pvp:
+  permission: hubPlus.pvp
+  permission message: {@noPermission}
   trigger:
     if {HubPlus::%uuid of player%::pvp} is not set:
       pvpToggle(player)
@@ -357,6 +359,8 @@ on click with magma cream:
 
 # Player Commands
 command /spawn:
+  permission: hubPlus.spawn
+  permission message: {@noPermission}
   trigger:
     if {HubPlus::%uuid of player%::pvp} is set:
       if {HubPlus::%uuid of player%::cooldowns::timer} is not set:
@@ -409,8 +413,9 @@ command /ping [<player>]:
       formatMsg(arg 1 , "{@pingOther}" , 3 , player)
 # Staff Commands
 command /vanish:
-  permission: staff.admin.vanish
-  permission message: &9Permissions> &7Sorry but you do not have the permission &c'staff.admin.vanish'&7.
+  aliases: /v
+  permission: hubPlus.vanish
+  permission message: {@noPermission}
   trigger:
     if {hubPlus::%uuid of player%::vanish} is true:
       delete {hubPlus::%uuid of player%::vanish}

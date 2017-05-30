@@ -41,3 +41,7 @@ Command | Permission
 /clearchat | hubPlus.clearchat
 /announce | hubPlus.announce
 /vanish | hubPlus.vanish
+
+![Banner](https://raw.githubusercontent.com/LegendEffects/HubPlus/master/Screens/Bossbar.PNG)
+![Banner](https://raw.githubusercontent.com/LegendEffects/HubPlus/master/Screens/Scoreboard.PNG)
+![Banner](https://raw.githubusercontent.com/LegendEffects/HubPlus/master/Screens/Title.PNG
